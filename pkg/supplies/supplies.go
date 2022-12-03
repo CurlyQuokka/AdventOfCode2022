@@ -9,7 +9,6 @@ const (
 
 type supplies struct {
 	rucksacks []*rucksack
-	doubled   []rune
 }
 
 type rucksack struct {
@@ -123,7 +122,7 @@ func removeMulti(s string) string {
 		sMap[r] = true
 	}
 	out := ""
-	for key, _ := range sMap {
+	for key := range sMap {
 		out += string(key)
 	}
 	return out
