@@ -6,9 +6,9 @@ import (
 )
 
 const (
-	Rock     sign = 1
-	Paper    sign = 2
-	Scissors sign = 3
+	rockValue     uint8 = 1
+	paperValue    uint8 = 2
+	scissorsValue uint8 = 3
 
 	Loose outcome = 0
 	Draw  outcome = 3
@@ -18,7 +18,7 @@ const (
 )
 
 type gameSymbol struct {
-	sign     sign
+	value    uint8
 	winsWith *gameSymbol
 	loosesTo *gameSymbol
 }
@@ -32,13 +32,13 @@ type symbols struct {
 func initSymbols() *symbols {
 	s := &symbols{
 		rock: &gameSymbol{
-			sign: Rock,
+			value: rockValue,
 		},
 		paper: &gameSymbol{
-			sign: Paper,
+			value: paperValue,
 		},
 		scissors: &gameSymbol{
-			sign: Scissors,
+			value: scissorsValue,
 		},
 	}
 	s.rock.loosesTo = s.paper
@@ -66,8 +66,6 @@ func NewGame(input []string) *Game {
 	}
 	return game
 }
-
-type sign uint8
 
 type outcome uint8
 
@@ -115,12 +113,11 @@ func decodeOutcome(in string) outcome {
 }
 
 func (s *skirmish) getOutcome() outcome {
-	if s.Attack == s.Response {
+	if s.Response == s.Attack {
 		return Draw
-	} else if s.Response == s.Attack.loosesTo {
+	} else if s.Response.winsWith == s.Attack {
 		return Win
 	}
-
 	return Loose
 }
 
@@ -140,9 +137,9 @@ func (g *Game) GetScore(isPartOne bool) uint {
 	score = 0
 	for _, sk := range g.skirmishes {
 		if isPartOne {
-			score += uint(sk.getOutcome()) + uint(sk.Response.sign)
+			score += uint(sk.getOutcome()) + uint(sk.Response.value)
 		} else {
-			score += uint(sk.Outcome) + uint(getSymbolForOutcome(sk.Attack, sk.Outcome).sign)
+			score += uint(sk.Outcome) + uint(getSymbolForOutcome(sk.Attack, sk.Outcome).value)
 		}
 	}
 	return score
