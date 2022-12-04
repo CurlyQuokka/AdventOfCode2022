@@ -91,14 +91,14 @@ func (p *pair) isOverlapped(assignmentOverlapFunc assignmentOverFunc) bool {
 	return false
 }
 
-func AreAssignemntsFullyOverlapped(a, b assignment) bool {
+func AreAssignmentsFullyOverlapped(a, b assignment) bool {
 	if a.startSection >= b.startSection && a.endSection <= b.endSection {
 		return true
 	}
 	return false
 }
 
-func AreAssignemntsOverlapped(a, b assignment) bool {
+func AreAssignmentsOverlapped(a, b assignment) bool {
 	if a.startSection >= b.startSection && a.startSection <= b.endSection || a.endSection >= b.startSection && a.endSection <= b.endSection {
 		return true
 	}

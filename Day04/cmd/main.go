@@ -25,8 +25,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("Number of full overlaps: %d\n", c.GetOverlappedNumber(cleaning.AreAssignemntsFullyOverlapped))
-	fmt.Printf("Number of overlaps: %d\n", c.GetOverlappedNumber(cleaning.AreAssignemntsOverlapped))
+	fmt.Printf("Number of full overlaps: %d\n", c.GetOverlappedNumber(cleaning.AreAssignmentsFullyOverlapped))
+	fmt.Printf("Number of overlaps: %d\n", c.GetOverlappedNumber(cleaning.AreAssignmentsOverlapped))
 
 	os.Exit(0)
 }
