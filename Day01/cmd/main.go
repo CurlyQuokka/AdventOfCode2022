@@ -1,12 +1,13 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"log"
 	"os"
-	"sort"
 	"strconv"
+
+	"github.com/CurlyQuokka/AdventOfCode2022/pkg/calories"
+	"github.com/CurlyQuokka/AdventOfCode2022/pkg/utils"
 )
 
 func main() {
@@ -24,43 +25,16 @@ func main() {
 		topNum = tn
 	}
 
-	file, err := os.Open(filePath)
+	input, err := utils.LoadInput(filePath)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer file.Close()
 
-	scanner := bufio.NewScanner(file)
-
-	values := []int{}
-	currentValue := 0
-	for scanner.Scan() {
-		strVal := scanner.Text()
-		if strVal != "" {
-			v, err := strconv.Atoi(scanner.Text())
-			if err != nil {
-				log.Fatal(err)
-			}
-			currentValue += v
-		} else {
-			values = append(values, currentValue)
-			currentValue = 0
-		}
-	}
-
-	if err := scanner.Err(); err != nil {
+	c, err := calories.NewCalories(input)
+	if err != nil {
 		log.Fatal(err)
 	}
 
-	if currentValue != 0 {
-		values = append(values, currentValue)
-	}
-
-	sort.Ints(values)
-	fmt.Println("Max cal:", values[len(values)-1])
-	result := 0
-	for i := len(values) - 1; i >= len(values)-topNum && i >= 0; i-- {
-		result += values[i]
-	}
-	fmt.Printf("Top %d:\t %d\n", topNum, result)
+	fmt.Println("Max calories:\t", c.GetTop(1))
+	fmt.Printf("Top %d:\t\t%d\n", topNum, c.GetTop(topNum))
 }
