@@ -6,101 +6,101 @@ import (
 )
 
 const (
-	Rock     Sign = 1
-	Paper    Sign = 2
-	Scissors Sign = 3
+	Rock     sign = 1
+	Paper    sign = 2
+	Scissors sign = 3
 
-	Loose Outcome = 0
-	Draw  Outcome = 3
-	Win   Outcome = 6
+	Loose outcome = 0
+	Draw  outcome = 3
+	Win   outcome = 6
 
 	separator = " "
 )
 
-type GameSymbol struct {
-	sign     Sign
-	winsWith *GameSymbol
-	loosesTo *GameSymbol
+type gameSymbol struct {
+	sign     sign
+	winsWith *gameSymbol
+	loosesTo *gameSymbol
 }
 
-type Symbols struct {
-	rock     *GameSymbol
-	paper    *GameSymbol
-	scissors *GameSymbol
+type symbols struct {
+	rock     *gameSymbol
+	paper    *gameSymbol
+	scissors *gameSymbol
 }
 
-func initSymbols() *Symbols {
-	symbols := &Symbols{
-		rock: &GameSymbol{
+func initSymbols() *symbols {
+	s := &symbols{
+		rock: &gameSymbol{
 			sign: Rock,
 		},
-		paper: &GameSymbol{
+		paper: &gameSymbol{
 			sign: Paper,
 		},
-		scissors: &GameSymbol{
+		scissors: &gameSymbol{
 			sign: Scissors,
 		},
 	}
-	symbols.rock.loosesTo = symbols.paper
-	symbols.rock.winsWith = symbols.scissors
-	symbols.paper.loosesTo = symbols.scissors
-	symbols.paper.winsWith = symbols.rock
-	symbols.scissors.loosesTo = symbols.rock
-	symbols.scissors.winsWith = symbols.paper
+	s.rock.loosesTo = s.paper
+	s.rock.winsWith = s.scissors
+	s.paper.loosesTo = s.scissors
+	s.paper.winsWith = s.rock
+	s.scissors.loosesTo = s.rock
+	s.scissors.winsWith = s.paper
 
-	return symbols
+	return s
 }
 
 type Game struct {
-	skirmishes []*Skirmish
-	symbols    *Symbols
+	skirmishes []*skirmish
+	gsymbols   *symbols
 }
 
 func NewGame(input []string) *Game {
 	game := &Game{
-		skirmishes: []*Skirmish{},
-		symbols:    initSymbols(),
+		skirmishes: []*skirmish{},
+		gsymbols:   initSymbols(),
 	}
 	for _, line := range input {
-		game.skirmishes = append(game.skirmishes, NewSkirmish(line, game.symbols))
+		game.skirmishes = append(game.skirmishes, newSkirmish(line, game.gsymbols))
 	}
 	return game
 }
 
-type Sign uint8
+type sign uint8
 
-type Outcome uint8
+type outcome uint8
 
-type Skirmish struct {
-	Attack   *GameSymbol
-	Response *GameSymbol
-	Outcome  Outcome
+type skirmish struct {
+	Attack   *gameSymbol
+	Response *gameSymbol
+	Outcome  outcome
 }
 
-func NewSkirmish(in string, symbols *Symbols) *Skirmish {
+func newSkirmish(in string, s *symbols) *skirmish {
 	signs := strings.Split(in, separator)
-	return &Skirmish{
-		Attack:   decodeSymbol(signs[0], symbols),
-		Response: decodeSymbol(signs[1], symbols),
+	return &skirmish{
+		Attack:   decodeSymbol(signs[0], s),
+		Response: decodeSymbol(signs[1], s),
 		Outcome:  decodeOutcome(signs[1]),
 	}
 }
 
-func decodeSymbol(in string, symbols *Symbols) *GameSymbol {
+func decodeSymbol(in string, s *symbols) *gameSymbol {
 	switch in {
 	case "A", "X":
-		return symbols.rock
+		return s.rock
 	case "B", "Y":
-		return symbols.paper
+		return s.paper
 	case "C", "Z":
-		return symbols.scissors
+		return s.scissors
 	default:
 		log.Fatal("Unknown sign:", in)
 	}
 	return nil
 }
 
-func decodeOutcome(in string) Outcome {
+func decodeOutcome(in string) outcome {
 	switch in {
 	case "X":
 		return Loose
@@ -114,7 +114,7 @@ func decodeOutcome(in string) Outcome {
 	return 0
 }
 
-func (s *Skirmish) getOutcome() Outcome {
+func (s *skirmish) getOutcome() outcome {
 	if s.Attack == s.Response {
 		return Draw
 	} else if s.Response == s.Attack.loosesTo {
@@ -124,8 +124,8 @@ func (s *Skirmish) getOutcome() Outcome {
 	return Loose
 }
 
-func getSymbolForOutcome(attack *GameSymbol, outcome Outcome) *GameSymbol {
-	switch outcome {
+func getSymbolForOutcome(attack *gameSymbol, o outcome) *gameSymbol {
+	switch o {
 	case Draw:
 		return attack
 	case Win:
