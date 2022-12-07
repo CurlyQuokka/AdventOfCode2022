@@ -20,7 +20,7 @@ type Filesystem struct {
 	currentDir *directory
 }
 
-func NewFileSystem() *Filesystem {
+func NewFilesystem() *Filesystem {
 	rootDir := newDirectory(rootName, nil)
 	return &Filesystem{
 		root:       rootDir,

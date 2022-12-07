@@ -30,7 +30,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fs := filesystem.NewFileSystem()
+	fs := filesystem.NewFilesystem()
 	err = fs.ProcessCommands(input)
 	if err != nil {
 		log.Fatal(err)
