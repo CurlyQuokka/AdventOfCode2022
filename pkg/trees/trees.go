@@ -138,7 +138,7 @@ func prepareVisibility(input []string) [][]int {
 	visiblity := [][]int{}
 	for row, r := range input {
 		var tmp []int
-		for col, _ := range r {
+		for col := range r {
 			if row == 0 || col == 0 || row == len(r)-1 || col == len(input)-1 {
 				tmp = append(tmp, 1)
 			} else {
