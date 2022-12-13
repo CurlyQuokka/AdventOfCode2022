@@ -5,6 +5,8 @@ import (
 	"math"
 	"strconv"
 	"strings"
+
+	"github.com/CurlyQuokka/AdventOfCode2022/pkg/utils"
 )
 
 const (
@@ -69,8 +71,8 @@ func (r *Rope) PrintKnots() {
 	vis[16][12] = "s"
 
 	for k, knot := range r.knots {
-		if knot.currPos.x != 0 || knot.currPos.y != 0 {
-			vis[knot.currPos.y+16][knot.currPos.x+12] = fmt.Sprintf("%d", k)
+		if knot.currPos.X != 0 || knot.currPos.Y != 0 {
+			vis[knot.currPos.Y+16][knot.currPos.X+12] = fmt.Sprintf("%d", k)
 		}
 	}
 
@@ -84,26 +86,22 @@ func (r *Rope) CountVisited() int {
 	return len(r.visited)
 }
 
-type position struct {
-	x, y int
-}
-
 type knot struct {
-	currPos position
-	prevPos position
+	currPos utils.Position
+	prevPos utils.Position
 }
 
 func (k *knot) update(command string) {
 	k.prevPos = k.currPos
 	switch command {
 	case moveUp:
-		k.currPos.y--
+		k.currPos.Y--
 	case moveDown:
-		k.currPos.y++
+		k.currPos.Y++
 	case moveLeft:
-		k.currPos.x--
+		k.currPos.X--
 	default:
-		k.currPos.x++
+		k.currPos.X++
 	}
 
 }
@@ -111,31 +109,31 @@ func (k *knot) update(command string) {
 func (k *knot) updateWithKnot(h knot) {
 	if calculateDistance(k.currPos, h.currPos) > updateLimit {
 		k.prevPos = k.currPos
-		if k.currPos.x == h.currPos.x || k.currPos.y == h.currPos.y {
-			if k.currPos.x == h.currPos.x {
-				if k.currPos.y > h.currPos.y {
-					k.currPos.y--
+		if k.currPos.X == h.currPos.X || k.currPos.Y == h.currPos.Y {
+			if k.currPos.X == h.currPos.X {
+				if k.currPos.Y > h.currPos.Y {
+					k.currPos.Y--
 				} else {
-					k.currPos.y++
+					k.currPos.Y++
 				}
 			}
-			if k.currPos.y == h.currPos.y {
-				if k.currPos.x > h.currPos.x {
-					k.currPos.x--
+			if k.currPos.Y == h.currPos.Y {
+				if k.currPos.X > h.currPos.X {
+					k.currPos.X--
 				} else {
-					k.currPos.x++
+					k.currPos.X++
 				}
 			}
 		} else {
-			if k.currPos.x < h.currPos.x {
-				k.currPos.x++
+			if k.currPos.X < h.currPos.X {
+				k.currPos.X++
 			} else {
-				k.currPos.x--
+				k.currPos.X--
 			}
-			if k.currPos.y < h.currPos.y {
-				k.currPos.y++
+			if k.currPos.Y < h.currPos.Y {
+				k.currPos.Y++
 			} else {
-				k.currPos.y--
+				k.currPos.Y--
 			}
 		}
 
@@ -143,9 +141,9 @@ func (k *knot) updateWithKnot(h knot) {
 }
 
 func (k *knot) getKey() string {
-	return fmt.Sprintf("%d-%d", k.currPos.x, k.currPos.y)
+	return fmt.Sprintf("%d-%d", k.currPos.X, k.currPos.Y)
 }
 
-func calculateDistance(firstPos, secondPos position) float64 {
-	return math.Sqrt(math.Pow(float64(secondPos.x-firstPos.x), 2) + math.Pow(float64(secondPos.y-firstPos.y), 2))
+func calculateDistance(firstPos, secondPos utils.Position) float64 {
+	return math.Sqrt(math.Pow(float64(secondPos.X-firstPos.X), 2) + math.Pow(float64(secondPos.Y-firstPos.Y), 2))
 }

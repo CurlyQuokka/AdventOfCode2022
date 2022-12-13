@@ -5,6 +5,10 @@ import (
 	"os"
 )
 
+type Position struct {
+	Y, X int
+}
+
 func LoadInput(path string) ([]string, error) {
 	file, err := os.Open(path)
 	if err != nil {
